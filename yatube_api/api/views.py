@@ -2,8 +2,10 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
-from posts.models import Post, Comment, Group, User
-from .serializers import ApiPostSerializer, ApiCommentSerializer, GroupSerializer
+from posts.models import Post, Comment, Group
+from .serializers import (ApiPostSerializer,
+                          ApiCommentSerializer,
+                          GroupSerializer)
 
 
 class ApiPostListCreateView(generics.ListCreateAPIView):
@@ -23,14 +25,16 @@ class ApiPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if request.user != instance.author:
-            return Response({"detail": "Не трогай чужое"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"detail": "Не трогай чужое"},
+                            status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         if request.user != instance.author:
-            return Response({"detail": "Не трогай чужое"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"detail": "Не трогай чужое"},
+                            status=status.HTTP_403_FORBIDDEN)
         return super().update(request, *args, **kwargs)
 
 
@@ -58,7 +62,6 @@ class ApiCommentListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         post_id = self.request.data.get('post_id')
         if not post_id:
-            # Если post_id не передан, можно попробовать получить его из URL
             post_id = self.kwargs.get('post_id')
         post = None
         if post_id:
@@ -75,12 +78,14 @@ class ApiCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         if request.user != instance.author:
-            return Response({"detail": "Не трогай чужое"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"detail": "Не трогай чужое"},
+                            status=status.HTTP_403_FORBIDDEN)
         return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if request.user != instance.author:
-            return Response({"detail": "Не трогай чужое"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"detail": "Не трогай чужое"},
+                            status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)

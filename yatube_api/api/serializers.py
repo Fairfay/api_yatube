@@ -3,7 +3,8 @@ from posts.models import Post, Comment, Group
 
 
 class ApiCommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(source='author.username', read_only=True)
+    author = serializers.StringRelatedField(source='author.username',
+                                            read_only=True)
     post = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
@@ -13,7 +14,8 @@ class ApiCommentSerializer(serializers.ModelSerializer):
 
 
 class ApiPostSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(source='author.username', read_only=True)
+    author = serializers.StringRelatedField(source='author.username',
+                                            read_only=True)
     comments = ApiCommentSerializer(many=True, read_only=True)
 
     class Meta:
